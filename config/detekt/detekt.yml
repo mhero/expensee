@@ -1,0 +1,24 @@
+# Minimal Detekt override on top of the default ruleset (buildUponDefaultConfig = true).
+# Only rules where the project intentionally deviates from defaults are listed.
+
+style:
+  MagicNumber:
+    active: true
+    ignoreAnnotated: ['Preview']
+    ignoreNumbers: ['-1', '0', '1', '2']
+  MaxLineLength:
+    active: true
+    maxLineLength: 120
+
+complexity:
+  LongMethod:
+    active: true
+    threshold: 60
+  TooManyFunctions:
+    active: true
+    thresholdInClasses: 20
+
+naming:
+  FunctionNaming:
+    active: true
+    ignoreAnnotated: ['Composable']

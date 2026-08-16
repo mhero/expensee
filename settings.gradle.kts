@@ -23,4 +23,18 @@ dependencyResolutionManagement {
 }
 
 rootProject.name = "Expensee"
+
 include(":app")
+
+include(":core:common")
+include(":core:database")
+include(":core:network")
+include(":core:security")
+include(":core:ui")
+include(":core:testing")
+
+include(":feature:auth")
+include(":feature:expenses")
+include(":feature:categories")
+include(":feature:dashboard")
+include(":feature:settings")
