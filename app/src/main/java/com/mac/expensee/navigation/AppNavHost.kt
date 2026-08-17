@@ -14,6 +14,8 @@ import androidx.navigation.compose.rememberNavController
 import com.mac.expensee.core.ui.components.FullScreenLoading
 import com.mac.expensee.feature.auth.navigation.AuthDestinations
 import com.mac.expensee.feature.auth.navigation.authGraph
+import com.mac.expensee.feature.expenses.navigation.ExpensesDestinations
+import com.mac.expensee.feature.expenses.navigation.expensesGraph
 import org.koin.androidx.compose.koinViewModel
 
 /**
@@ -62,9 +64,11 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
                 HomeScreen(
                     username = currentSession.user.username,
                     onLogout = { rootViewModel.logout() },
+                    onViewExpenses = { navController.navigate(ExpensesDestinations.LIST_ROUTE) },
                 )
             }
         }
+        expensesGraph(navController)
     }
 
     // Session was cleared (logout) while sitting on an authenticated screen: fall back to login.

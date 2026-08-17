@@ -5,6 +5,7 @@ import com.mac.expensee.core.database.di.databaseModule
 import com.mac.expensee.core.network.di.networkModule
 import com.mac.expensee.core.security.di.securityModule
 import com.mac.expensee.feature.auth.di.authModule
+import com.mac.expensee.feature.expenses.di.expensesModule
 import com.mac.expensee.navigation.RootViewModel
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
@@ -24,5 +25,6 @@ val appModules = listOf(
     networkModule,
     securityModule,
     authModule,
+    expensesModule,
     appModule,
 )
