@@ -39,11 +39,11 @@ import com.mac.expensee.core.ui.components.ErrorState
 import com.mac.expensee.core.ui.components.FullScreenLoading
 import com.mac.expensee.core.ui.components.MoneyText
 import com.mac.expensee.core.ui.components.UiState
+import com.mac.expensee.feature.expenses.domain.model.ExpenseCategory
 import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import com.mac.expensee.feature.expenses.domain.model.ExpenseCategory
 
 @Composable
 fun ExpensesListRoute(
