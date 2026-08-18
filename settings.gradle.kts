@@ -32,6 +32,7 @@ include(":core:network")
 include(":core:security")
 include(":core:ui")
 include(":core:testing")
+include(":core:datastore")
 
 include(":feature:auth")
 include(":feature:expenses")

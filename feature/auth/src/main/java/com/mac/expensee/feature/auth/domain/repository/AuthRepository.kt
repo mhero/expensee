@@ -1,6 +1,7 @@
 package com.mac.expensee.feature.auth.domain.repository
 
 import com.mac.expensee.core.common.result.AppResult
+import com.mac.expensee.core.security.biometric.BiometricUnlockRepository
 import com.mac.expensee.feature.auth.domain.model.AuthSession
 import kotlinx.coroutines.flow.Flow
 
@@ -9,8 +10,11 @@ import kotlinx.coroutines.flow.Flow
  * [com.mac.expensee.feature.auth.data.LocalAuthRepository]; a future `RemoteAuthRepository`
  * (delegating to `core:network`'s `AuthApi`) can be swapped in -- or composed with the local one
  * for offline fallback -- without any ViewModel or Composable changing.
+ *
+ * Extends [BiometricUnlockRepository] so `feature:settings` can toggle/observe biometric unlock
+ * through that narrower core-level interface without depending on this (feature:auth-owned) one.
  */
-interface AuthRepository {
+interface AuthRepository : BiometricUnlockRepository {
 
     /** Emits the current session, or null when logged out. Replayed to new collectors. */
     fun observeSession(): Flow<AuthSession?>
@@ -31,6 +35,4 @@ interface AuthRepository {
     suspend fun restoreSessionAfterBiometricUnlock(): AppResult<AuthSession>
 
     suspend fun logout()
-
-    suspend fun setBiometricUnlockEnabled(enabled: Boolean)
 }

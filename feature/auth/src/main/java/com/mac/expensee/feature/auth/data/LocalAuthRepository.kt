@@ -16,6 +16,7 @@ import java.util.UUID
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.map
 
 /**
  * The only [AuthRepository] implementation today. Local-only: there is no server, so "login"
@@ -93,6 +94,9 @@ class LocalAuthRepository(
             sessionState.value = current.copy(user = current.user.copy(biometricUnlockEnabled = enabled))
         }
     }
+
+    override fun observeBiometricUnlockEnabled(): Flow<Boolean> =
+        userDao.observeCurrentUser().map { it?.biometricUnlockEnabled ?: false }
 
     private fun establishSession(entity: UserEntity): AppResult<AuthSession> {
         val token = UUID.randomUUID().toString()

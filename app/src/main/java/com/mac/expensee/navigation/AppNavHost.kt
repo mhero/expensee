@@ -19,6 +19,8 @@ import com.mac.expensee.feature.dashboard.navigation.DashboardDestinations
 import com.mac.expensee.feature.dashboard.navigation.dashboardGraph
 import com.mac.expensee.feature.expenses.navigation.ExpensesDestinations
 import com.mac.expensee.feature.expenses.navigation.expensesGraph
+import com.mac.expensee.feature.settings.navigation.SettingsDestinations
+import com.mac.expensee.feature.settings.navigation.settingsGraph
 import org.koin.androidx.compose.koinViewModel
 
 /**
@@ -65,10 +67,14 @@ fun AppNavHost(navController: NavHostController = rememberNavController()) {
         dashboardGraph(
             onManageCategories = { navController.navigate(CategoriesDestinations.LIST_ROUTE) },
             onViewAllExpenses = { navController.navigate(ExpensesDestinations.LIST_ROUTE) },
-            onLogout = { rootViewModel.logout() },
+            onOpenSettings = { navController.navigate(SettingsDestinations.HOME_ROUTE) },
         )
         expensesGraph(navController)
         categoriesGraph(navController)
+        settingsGraph(
+            onLogout = { rootViewModel.logout() },
+            onBack = { navController.popBackStack() },
+        )
     }
 
     // Session was cleared (logout) while sitting on an authenticated screen: fall back to login.

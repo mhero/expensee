@@ -16,7 +16,7 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Logout
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -52,7 +52,7 @@ import org.koin.androidx.compose.koinViewModel
 fun DashboardRoute(
     onManageCategories: () -> Unit,
     onViewAllExpenses: () -> Unit,
-    onLogout: () -> Unit,
+    onOpenSettings: () -> Unit,
     viewModel: DashboardViewModel = koinViewModel(),
 ) {
     val state by viewModel.state.collectAsState()
@@ -60,7 +60,7 @@ fun DashboardRoute(
         state = state,
         onManageCategories = onManageCategories,
         onViewAllExpenses = onViewAllExpenses,
-        onLogout = onLogout,
+        onOpenSettings = onOpenSettings,
     )
 }
 
@@ -70,16 +70,15 @@ private fun DashboardScreen(
     state: DashboardUiState,
     onManageCategories: () -> Unit,
     onViewAllExpenses: () -> Unit,
-    onLogout: () -> Unit,
+    onOpenSettings: () -> Unit,
 ) {
     Scaffold(
         topBar = {
             TopAppBar(
                 title = { Text("Dashboard") },
                 actions = {
-                    // Temporary home for logout until feature:settings lands -- see project README.
-                    IconButton(onClick = onLogout) {
-                        Icon(Icons.Filled.Logout, contentDescription = "Log out")
+                    IconButton(onClick = onOpenSettings) {
+                        Icon(Icons.Filled.Settings, contentDescription = "Settings")
                     }
                 },
             )

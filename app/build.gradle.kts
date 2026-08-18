@@ -49,6 +49,7 @@ dependencies {
     implementation(project(":core:network"))
     implementation(project(":core:security"))
     implementation(project(":core:ui"))
+    implementation(project(":core:datastore"))
 
     implementation(project(":feature:auth"))
     implementation(project(":feature:expenses"))
@@ -72,6 +73,7 @@ dependencies {
     implementation(libs.koin.androidx.workmanager)
 
     implementation(libs.androidx.work.runtime.ktx)
+    implementation(libs.androidx.fragment.ktx)
 
     coreLibraryDesugaring(libs.android.desugar.jdk.libs)
 
