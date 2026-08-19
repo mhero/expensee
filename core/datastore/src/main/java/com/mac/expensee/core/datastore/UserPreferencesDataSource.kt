@@ -5,6 +5,7 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.preferences.core.Preferences
 import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
+import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
 import kotlinx.coroutines.flow.Flow
@@ -28,6 +29,9 @@ class UserPreferencesDataSource(private val context: Context) {
     val themeMode: Flow<String?> = context.dataStore.data.map { it[THEME_MODE] }
     val notificationsEnabled: Flow<Boolean?> = context.dataStore.data.map { it[NOTIFICATIONS_ENABLED] }
 
+    /** Epoch millis of the last successful [com.mac.expensee.sync.SyncManager] run, or null if sync has never run. */
+    val lastSyncTimestamp: Flow<Long?> = context.dataStore.data.map { it[LAST_SYNC_TIMESTAMP] }
+
     suspend fun setCurrencyCode(isoCode: String) {
         context.dataStore.edit { prefs -> prefs[CURRENCY_CODE] = isoCode }
     }
@@ -40,9 +44,14 @@ class UserPreferencesDataSource(private val context: Context) {
         context.dataStore.edit { prefs -> prefs[NOTIFICATIONS_ENABLED] = enabled }
     }
 
+    suspend fun setLastSyncTimestamp(epochMillis: Long) {
+        context.dataStore.edit { prefs -> prefs[LAST_SYNC_TIMESTAMP] = epochMillis }
+    }
+
     private companion object {
         val CURRENCY_CODE = stringPreferencesKey("currency_code")
         val THEME_MODE = stringPreferencesKey("theme_mode")
         val NOTIFICATIONS_ENABLED = booleanPreferencesKey("notifications_enabled")
+        val LAST_SYNC_TIMESTAMP = longPreferencesKey("last_sync_timestamp")
     }
 }

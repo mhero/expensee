@@ -24,6 +24,8 @@ private val appModule = module {
  * All Koin modules the app starts with. Each `core:*` / `feature:*` module owns and exports its
  * own module (see e.g. `core.security.di.securityModule`); the app module's only job is to know
  * they all exist and list them here -- no feature module depends on another feature module's DI.
+ * `notificationModule` and `syncModule` are app-level infrastructure modules, not tied to any
+ * single feature -- see their own KDoc for why.
  */
 val appModules = listOf(
     commonModule,
@@ -37,5 +39,6 @@ val appModules = listOf(
     dashboardModule,
     settingsModule,
     notificationModule,
+    syncModule,
     appModule,
 )

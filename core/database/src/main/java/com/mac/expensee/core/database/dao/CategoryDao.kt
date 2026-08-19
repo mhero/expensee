@@ -5,6 +5,7 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Update
+import com.mac.expensee.core.common.sync.SyncStatus
 import com.mac.expensee.core.database.entity.CategoryEntity
 import kotlinx.coroutines.flow.Flow
 
@@ -29,6 +30,22 @@ interface CategoryDao {
     @Update
     suspend fun update(category: CategoryEntity)
 
+    /**
+     * Soft-delete: mirrors [com.mac.expensee.core.database.dao.ExpenseDao.softDelete] -- a category
+     * that was already pushed to a (future) server needs its deletion communicated, not silently
+     * dropped locally. [hardDelete] still exists for the (today, hypothetical) case of purging a
+     * tombstone once that deletion is confirmed synced.
+     */
+    @Query(
+        "UPDATE categories SET deletedAt = :deletedAt, syncStatus = :syncStatus, updatedAt = :deletedAt, " +
+            "version = version + 1 WHERE localId = :localId",
+    )
+    suspend fun softDelete(localId: String, deletedAt: Long, syncStatus: SyncStatus = SyncStatus.PENDING_DELETE)
+
     @Query("DELETE FROM categories WHERE localId = :localId")
     suspend fun hardDelete(localId: String)
+
+    /** Hard-delete rows that were tombstoned and already confirmed synced -- used by cleanup work. */
+    @Query("DELETE FROM categories WHERE deletedAt IS NOT NULL AND syncStatus = :synced")
+    suspend fun purgeSyncedTombstones(synced: SyncStatus = SyncStatus.SYNCED)
 }

@@ -74,7 +74,11 @@ class CategoryRepositoryImpl(
                 reason = "This category is still used by one or more expenses. Move or delete those first.",
             ).asError()
         }
-        categoryDao.hardDelete(id)
+        // Soft-delete (tombstone), not a hard delete: matches ExpenseEntity's sync-ready design --
+        // a category that was already pushed to a (future) server still needs its deletion
+        // communicated, so it can't just vanish locally. SyncManager/CleanupWorker (see
+        // project README's "Sync model") purge the tombstone once that's confirmed.
+        categoryDao.softDelete(localId = id, deletedAt = System.currentTimeMillis())
         Unit.asSuccess()
     }
 

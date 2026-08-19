@@ -3,6 +3,8 @@ package com.mac.expensee
 import android.app.Application
 import com.mac.expensee.di.appModules
 import com.mac.expensee.notification.ReminderCoordinator
+import com.mac.expensee.sync.CleanupScheduler
+import com.mac.expensee.sync.SyncScheduler
 import kotlinx.coroutines.CoroutineScope
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
@@ -23,6 +25,7 @@ class ExpenseeApplication : Application(), KoinComponent {
             modules(appModules)
         }
         startReminderCoordinator()
+        scheduleBackgroundWork()
     }
 
     /**
@@ -34,5 +37,19 @@ class ExpenseeApplication : Application(), KoinComponent {
         val coordinator: ReminderCoordinator = get()
         val appScope: CoroutineScope = get()
         coordinator.start(appScope)
+    }
+
+    /**
+     * Enqueues sync and tombstone-cleanup as periodic work on every app start. Both use
+     * [androidx.work.ExistingPeriodicWorkPolicy.KEEP], so this is a cheap no-op once already
+     * scheduled -- unlike the reminder job, neither depends on a user-facing toggle, so there's
+     * no coordinator needed, just a single idempotent call. [BootCompletedReceiver] makes the
+     * same calls after a reboot -- see its KDoc for why that's also needed.
+     */
+    private fun scheduleBackgroundWork() {
+        val syncScheduler: SyncScheduler = get()
+        val cleanupScheduler: CleanupScheduler = get()
+        syncScheduler.schedule()
+        cleanupScheduler.schedule()
     }
 }

@@ -2,11 +2,13 @@ package com.mac.expensee.feature.expenses.di
 
 import com.mac.expensee.feature.expenses.data.ExpenseCategoryLookupRepositoryImpl
 import com.mac.expensee.feature.expenses.data.ExpenseRepositoryImpl
+import com.mac.expensee.feature.expenses.data.ExpenseSyncGatewayImpl
 import com.mac.expensee.feature.expenses.data.receipt.LocalReceiptStorage
 import com.mac.expensee.feature.expenses.data.remote.RemoteExpenseDataSource
 import com.mac.expensee.feature.expenses.data.remote.RetrofitRemoteExpenseDataSource
 import com.mac.expensee.feature.expenses.domain.repository.ExpenseCategoryLookupRepository
 import com.mac.expensee.feature.expenses.domain.repository.ExpenseRepository
+import com.mac.expensee.feature.expenses.domain.repository.ExpenseSyncGateway
 import com.mac.expensee.feature.expenses.domain.repository.ReceiptStorage
 import com.mac.expensee.feature.expenses.domain.usecase.AddExpenseUseCase
 import com.mac.expensee.feature.expenses.domain.usecase.DeleteExpenseUseCase
@@ -26,6 +28,7 @@ val expensesModule = module {
     single<ExpenseCategoryLookupRepository> { ExpenseCategoryLookupRepositoryImpl(categoryDao = get()) }
     single<ReceiptStorage> { LocalReceiptStorage(context = get(), dispatcherProvider = get()) }
     single<RemoteExpenseDataSource> { RetrofitRemoteExpenseDataSource(api = get()) }
+    single<ExpenseSyncGateway> { ExpenseSyncGatewayImpl(expenseDao = get()) }
 
     factory { AddExpenseUseCase(get()) }
     factory { UpdateExpenseUseCase(get()) }

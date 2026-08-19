@@ -34,6 +34,10 @@ interface ExpenseDao {
     @Query("SELECT * FROM expenses WHERE localId = :localId")
     suspend fun getById(localId: String): ExpenseEntity?
 
+    /** Used by sync when applying a pulled remote change to find the matching local row, if any. */
+    @Query("SELECT * FROM expenses WHERE remoteId = :remoteId")
+    suspend fun getByRemoteId(remoteId: String): ExpenseEntity?
+
     @Query(
         "SELECT * FROM expenses WHERE deletedAt IS NULL AND date >= :fromInclusive AND date <= :toInclusive " +
             "ORDER BY date DESC LIMIT :limit",
