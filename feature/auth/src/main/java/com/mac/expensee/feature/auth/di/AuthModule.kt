@@ -10,7 +10,7 @@ import com.mac.expensee.feature.auth.domain.usecase.ObserveSessionUseCase
 import com.mac.expensee.feature.auth.domain.usecase.RegisterUseCase
 import com.mac.expensee.feature.auth.presentation.login.LoginViewModel
 import com.mac.expensee.feature.auth.presentation.setup.SetupAccountViewModel
-import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.bind
 import org.koin.dsl.module
 

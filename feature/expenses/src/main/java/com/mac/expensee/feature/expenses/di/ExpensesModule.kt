@@ -20,7 +20,7 @@ import com.mac.expensee.feature.expenses.domain.usecase.UpdateExpenseUseCase
 import com.mac.expensee.feature.expenses.presentation.addedit.AddEditExpenseViewModel
 import com.mac.expensee.feature.expenses.presentation.detail.ExpenseDetailViewModel
 import com.mac.expensee.feature.expenses.presentation.list.ExpensesListViewModel
-import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val expensesModule = module {

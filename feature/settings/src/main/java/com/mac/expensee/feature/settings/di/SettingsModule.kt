@@ -8,7 +8,7 @@ import com.mac.expensee.feature.settings.domain.usecase.SetCurrencyUseCase
 import com.mac.expensee.feature.settings.domain.usecase.SetNotificationsEnabledUseCase
 import com.mac.expensee.feature.settings.domain.usecase.SetThemeUseCase
 import com.mac.expensee.feature.settings.presentation.SettingsViewModel
-import org.koin.androidx.viewmodel.dsl.viewModel
+import org.koin.core.module.dsl.viewModel
 import org.koin.dsl.module
 
 val settingsModule = module {
