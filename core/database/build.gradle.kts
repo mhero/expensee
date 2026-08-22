@@ -19,6 +19,9 @@ android {
     kotlinOptions {
         jvmTarget = "11"
     }
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+    }
 }
 
 ksp {
@@ -40,6 +43,7 @@ dependencies {
     testImplementation(libs.room.testing)
     testImplementation(libs.robolectric)
     testImplementation(libs.androidx.arch.core.testing)
+    testImplementation(libs.androidx.junit) // pulls in androidx.test:core, for ApplicationProvider under Robolectric
 
     androidTestImplementation(libs.room.testing)
     androidTestImplementation(libs.androidx.junit)

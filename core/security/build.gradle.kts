@@ -33,4 +33,5 @@ dependencies {
     implementation(libs.androidx.core.ktx)
 
     testImplementation(project(":core:testing"))
+    testImplementation(libs.robolectric) // PasswordHasherTest uses RobolectricTestRunner; missing before Phase 6
 }

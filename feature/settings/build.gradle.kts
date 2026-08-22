@@ -22,6 +22,9 @@ android {
     buildFeatures {
         compose = true
     }
+    testOptions {
+        unitTests.isIncludeAndroidResources = true
+    }
 }
 
 dependencies {
@@ -46,4 +49,6 @@ dependencies {
     implementation(libs.kotlinx.coroutines.core)
 
     testImplementation(project(":core:testing"))
+    testImplementation(libs.robolectric)
+    testImplementation(libs.androidx.junit) // pulls in androidx.test:core, for ApplicationProvider under Robolectric
 }

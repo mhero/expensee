@@ -50,6 +50,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -81,9 +82,10 @@ fun AddEditExpenseRoute(
     )
 }
 
+/** `internal`, not `private`, so `AddEditExpenseScreenTest` (androidTest) can drive it directly with a fixed state. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun AddEditExpenseScreen(
+internal fun AddEditExpenseScreen(
     state: AddEditExpenseUiState,
     onAction: (AddEditExpenseAction) -> Unit,
     onNavigateUp: () -> Unit,
@@ -99,7 +101,10 @@ private fun AddEditExpenseScreen(
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text(if (state.isEditing) "Edit expense" else "Add expense") },
+                // Tagged (rather than relying on text alone) because when adding a new expense
+                // this title and the save button below render the same text ("Add expense") --
+                // see AddEditExpenseScreenTest.
+                title = { Text(if (state.isEditing) "Edit expense" else "Add expense", modifier = Modifier.testTag("screenTitle")) },
             )
         },
     ) { padding ->
@@ -163,7 +168,9 @@ private fun AddEditExpenseScreen(
             Button(
                 onClick = { onAction(AddEditExpenseAction.Save) },
                 enabled = !state.isSaving,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .testTag("saveButton"),
             ) {
                 if (state.isSaving) {
                     CircularProgressIndicator(modifier = Modifier.size(20.dp))

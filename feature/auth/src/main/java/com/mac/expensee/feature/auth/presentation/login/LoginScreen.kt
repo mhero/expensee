@@ -44,8 +44,9 @@ fun LoginRoute(
     )
 }
 
+/** `internal`, not `private`, so `LoginScreenTest` (androidTest) can drive it directly with a fixed [LoginUiState]. */
 @Composable
-private fun LoginScreen(
+internal fun LoginScreen(
     state: LoginUiState,
     onAction: (LoginAction) -> Unit,
     onNavigateToSetup: () -> Unit,
