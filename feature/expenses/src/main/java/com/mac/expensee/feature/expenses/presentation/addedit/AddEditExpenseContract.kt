@@ -1,5 +1,6 @@
 package com.mac.expensee.feature.expenses.presentation.addedit
 
+import com.mac.expensee.core.common.money.CurrencyCode
 import com.mac.expensee.feature.expenses.domain.model.ExpenseCategory
 
 data class AddEditExpenseUiState(
@@ -8,6 +9,14 @@ data class AddEditExpenseUiState(
     val description: String = "",
     val notes: String = "",
     val date: Long = System.currentTimeMillis(),
+    /**
+     * Fixed for the lifetime of this form -- USD default until [com.mac.expensee.feature.expenses.presentation.addedit.AddEditExpenseViewModel]
+     * resolves the real value (the user's default-currency setting for a new expense, or the
+     * existing expense's own currency when editing; see that class's KDoc). Never re-derived
+     * reactively afterwards, so a settings change mid-edit can't silently change what an
+     * in-progress entry gets saved as.
+     */
+    val currency: CurrencyCode = CurrencyCode.USD,
     val categories: List<ExpenseCategory> = emptyList(),
     val selectedCategoryId: String? = null,
     val receiptPath: String? = null,

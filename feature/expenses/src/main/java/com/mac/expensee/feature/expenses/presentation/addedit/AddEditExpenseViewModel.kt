@@ -9,6 +9,7 @@ import com.mac.expensee.core.common.result.AppResult
 import com.mac.expensee.core.common.result.DataError
 import com.mac.expensee.feature.expenses.domain.model.Expense
 import com.mac.expensee.feature.expenses.domain.usecase.AddExpenseUseCase
+import com.mac.expensee.feature.expenses.domain.usecase.GetDefaultCurrencyUseCase
 import com.mac.expensee.feature.expenses.domain.usecase.ObserveExpenseCategoriesUseCase
 import com.mac.expensee.feature.expenses.domain.usecase.ObserveExpenseUseCase
 import com.mac.expensee.feature.expenses.domain.usecase.SaveReceiptUseCase
@@ -35,6 +36,7 @@ class AddEditExpenseViewModel(
     private val observeExpenseUseCase: ObserveExpenseUseCase,
     private val observeExpenseCategoriesUseCase: ObserveExpenseCategoriesUseCase,
     private val saveReceiptUseCase: SaveReceiptUseCase,
+    private val getDefaultCurrencyUseCase: GetDefaultCurrencyUseCase,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(
@@ -54,10 +56,18 @@ class AddEditExpenseViewModel(
             }
             .launchIn(viewModelScope)
 
-        existingExpenseId?.let { id ->
-            observeExpenseUseCase(id)
+        if (existingExpenseId != null) {
+            // Editing: applyExisting sets currency from the expense's own stored amount, below.
+            observeExpenseUseCase(existingExpenseId)
                 .onEach { expense -> expense?.let { applyExisting(it) } }
                 .launchIn(viewModelScope)
+        } else {
+            // Creating: default to whatever the user's currency setting is right now (see
+            // AddEditExpenseUiState.currency's KDoc for why this is fetched once, not observed).
+            viewModelScope.launch {
+                val defaultCurrency = getDefaultCurrencyUseCase()
+                _state.update { it.copy(currency = defaultCurrency) }
+            }
         }
     }
 
@@ -66,6 +76,7 @@ class AddEditExpenseViewModel(
             it.copy(
                 isLoadingExisting = false,
                 amountText = expense.amount.toMajorUnits().toPlainString(),
+                currency = expense.amount.currency,
                 description = expense.description,
                 notes = expense.notes.orEmpty(),
                 date = expense.date,
@@ -105,7 +116,7 @@ class AddEditExpenseViewModel(
         val current = _state.value
         if (current.isSaving) return
 
-        val amount = parseAmount(current.amountText)
+        val amount = parseAmount(current.amountText, current.currency)
         val categoryId = current.selectedCategoryId
         if (amount == null) {
             _state.update { it.copy(errorMessage = "Enter a valid amount") }
@@ -138,10 +149,10 @@ class AddEditExpenseViewModel(
         }
     }
 
-    private fun parseAmount(text: String): Money? {
+    private fun parseAmount(text: String, currency: CurrencyCode): Money? {
         val decimal = text.trim().toBigDecimalOrNull() ?: return null
         if (decimal <= BigDecimal.ZERO) return null
-        return runCatching { Money.fromMajorUnits(decimal, CurrencyCode.USD) }.getOrNull()
+        return runCatching { Money.fromMajorUnits(decimal, currency) }.getOrNull()
     }
 }
 

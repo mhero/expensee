@@ -1,5 +1,6 @@
 package com.mac.expensee.feature.dashboard.domain.repository
 
+import com.mac.expensee.core.common.money.CurrencyCode
 import com.mac.expensee.feature.dashboard.domain.model.DashboardSummary
 import kotlinx.coroutines.flow.Flow
 
@@ -9,5 +10,14 @@ import kotlinx.coroutines.flow.Flow
  * feature module, per this project's "no feature depends on another feature" rule.
  */
 interface DashboardRepository {
-    fun observeMonthlySummary(monthStartInclusive: Long, monthEndInclusive: Long): Flow<DashboardSummary>
+    /**
+     * [preferredCurrency] is the UI-selected currency to scope the summary to (see
+     * [DashboardSummary]'s KDoc for how a mismatch or null is resolved) -- pass null until the
+     * user has picked one.
+     */
+    fun observeMonthlySummary(
+        monthStartInclusive: Long,
+        monthEndInclusive: Long,
+        preferredCurrency: CurrencyCode?,
+    ): Flow<DashboardSummary>
 }

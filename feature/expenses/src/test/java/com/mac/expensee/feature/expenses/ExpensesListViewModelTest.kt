@@ -82,4 +82,52 @@ class ExpensesListViewModelTest {
             cancelAndIgnoreRemainingEvents()
         }
     }
+
+    @Test
+    fun `total sums expenses when they share one currency`() = runTest {
+        val viewModel = buildViewModel()
+        expenseRepository.addExpense(
+            Expense("e1", "cat-1", Money(1000, CurrencyCode.USD), "Lunch", null, System.currentTimeMillis(), null),
+        )
+        expenseRepository.addExpense(
+            Expense("e2", "cat-1", Money(500, CurrencyCode.USD), "Coffee", null, System.currentTimeMillis(), null),
+        )
+
+        viewModel.state.test {
+            val state = awaitItem()
+            assertThat(state.total).isEqualTo(Money(1500, CurrencyCode.USD))
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `total is null (not a crash) when expenses span more than one currency`() = runTest {
+        // Money.sum throws IllegalArgumentException on mismatched currencies (see Money.plus) --
+        // this guards against that once expenses can legitimately be created in different
+        // currencies (see AddEditExpenseViewModel).
+        val viewModel = buildViewModel()
+        expenseRepository.addExpense(
+            Expense("e1", "cat-1", Money(1000, CurrencyCode.USD), "Lunch", null, System.currentTimeMillis(), null),
+        )
+        expenseRepository.addExpense(
+            Expense("e2", "cat-1", Money(900, CurrencyCode.EUR), "Dinner", null, System.currentTimeMillis(), null),
+        )
+
+        viewModel.state.test {
+            val state = awaitItem()
+            assertThat(state.total).isNull()
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
+
+    @Test
+    fun `total is null when there are no expenses`() = runTest {
+        val viewModel = buildViewModel()
+
+        viewModel.state.test {
+            val state = awaitItem()
+            assertThat(state.total).isNull()
+            cancelAndIgnoreRemainingEvents()
+        }
+    }
 }

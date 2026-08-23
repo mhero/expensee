@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,6 +20,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material3.Card
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -58,16 +60,19 @@ fun DashboardRoute(
     val state by viewModel.state.collectAsState()
     DashboardScreen(
         state = state,
+        onAction = viewModel::onAction,
         onManageCategories = onManageCategories,
         onViewAllExpenses = onViewAllExpenses,
         onOpenSettings = onOpenSettings,
     )
 }
 
+/** `internal`, not `private`, so an instrumented UI test can drive it directly with a fixed [DashboardUiState]. */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-private fun DashboardScreen(
+internal fun DashboardScreen(
     state: DashboardUiState,
+    onAction: (DashboardAction) -> Unit,
     onManageCategories: () -> Unit,
     onViewAllExpenses: () -> Unit,
     onOpenSettings: () -> Unit,
@@ -89,6 +94,7 @@ private fun DashboardScreen(
             is UiState.Error -> ErrorState(message = summaryState.message, modifier = Modifier.padding(padding))
             is UiState.Content -> DashboardContent(
                 summary = summaryState.data,
+                onAction = onAction,
                 onManageCategories = onManageCategories,
                 onViewAllExpenses = onViewAllExpenses,
                 modifier = Modifier.padding(padding),
@@ -100,12 +106,16 @@ private fun DashboardScreen(
 @Composable
 private fun DashboardContent(
     summary: DashboardSummary,
+    onAction: (DashboardAction) -> Unit,
     onManageCategories: () -> Unit,
     onViewAllExpenses: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     LazyColumn(modifier = modifier, contentPadding = PaddingValues(16.dp)) {
         item { SummaryHeader(summary) }
+        if (summary.availableCurrencies.size > 1) {
+            item { CurrencySelector(summary = summary, onAction = onAction, modifier = Modifier.padding(top = 8.dp)) }
+        }
         item { MonthlyChart(summary.dailyTotals, modifier = Modifier.padding(top = 16.dp)) }
         item { SectionHeader(title = "Spending by category", actionLabel = "Manage", onAction = onManageCategories) }
         items(summary.categoryBreakdown, key = { it.categoryId }) { CategoryBreakdownRow(it) }
@@ -135,6 +145,30 @@ private fun SummaryHeader(summary: DashboardSummary) {
                 text = "${summary.expenseCount} expense${if (summary.expenseCount == 1) "" else "s"}",
                 style = MaterialTheme.typography.bodyLarge,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
+
+/**
+ * Only ever shown when [DashboardSummary.availableCurrencies] has more than one entry (see
+ * [DashboardContent]) -- with a single currency in play there's nothing to choose between, so no
+ * selector is rendered at all, per the project's spending-tracker scope (no cross-currency
+ * conversion or a combined multi-currency total -- see [DashboardSummary]'s KDoc).
+ */
+@OptIn(ExperimentalMaterial3Api::class)
+@Composable
+private fun CurrencySelector(
+    summary: DashboardSummary,
+    onAction: (DashboardAction) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    LazyRow(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+        items(summary.availableCurrencies, key = { it.isoCode }) { currency ->
+            FilterChip(
+                selected = currency == summary.selectedCurrency,
+                onClick = { onAction(DashboardAction.CurrencySelected(currency)) },
+                label = { Text(currency.isoCode) },
             )
         }
     }

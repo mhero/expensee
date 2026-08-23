@@ -1,17 +1,20 @@
 package com.mac.expensee.feature.expenses.di
 
+import com.mac.expensee.feature.expenses.data.DefaultCurrencyRepositoryImpl
 import com.mac.expensee.feature.expenses.data.ExpenseCategoryLookupRepositoryImpl
 import com.mac.expensee.feature.expenses.data.ExpenseRepositoryImpl
 import com.mac.expensee.feature.expenses.data.ExpenseSyncGatewayImpl
 import com.mac.expensee.feature.expenses.data.receipt.LocalReceiptStorage
 import com.mac.expensee.feature.expenses.data.remote.RemoteExpenseDataSource
 import com.mac.expensee.feature.expenses.data.remote.RetrofitRemoteExpenseDataSource
+import com.mac.expensee.feature.expenses.domain.repository.DefaultCurrencyRepository
 import com.mac.expensee.feature.expenses.domain.repository.ExpenseCategoryLookupRepository
 import com.mac.expensee.feature.expenses.domain.repository.ExpenseRepository
 import com.mac.expensee.feature.expenses.domain.repository.ExpenseSyncGateway
 import com.mac.expensee.feature.expenses.domain.repository.ReceiptStorage
 import com.mac.expensee.feature.expenses.domain.usecase.AddExpenseUseCase
 import com.mac.expensee.feature.expenses.domain.usecase.DeleteExpenseUseCase
+import com.mac.expensee.feature.expenses.domain.usecase.GetDefaultCurrencyUseCase
 import com.mac.expensee.feature.expenses.domain.usecase.ObserveExpenseCategoriesUseCase
 import com.mac.expensee.feature.expenses.domain.usecase.ObserveExpenseUseCase
 import com.mac.expensee.feature.expenses.domain.usecase.ObserveExpensesUseCase
@@ -20,12 +23,13 @@ import com.mac.expensee.feature.expenses.domain.usecase.UpdateExpenseUseCase
 import com.mac.expensee.feature.expenses.presentation.addedit.AddEditExpenseViewModel
 import com.mac.expensee.feature.expenses.presentation.detail.ExpenseDetailViewModel
 import com.mac.expensee.feature.expenses.presentation.list.ExpensesListViewModel
-import org.koin.core.module.dsl.viewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val expensesModule = module {
     single<ExpenseRepository> { ExpenseRepositoryImpl(expenseDao = get(), dispatcherProvider = get()) }
     single<ExpenseCategoryLookupRepository> { ExpenseCategoryLookupRepositoryImpl(categoryDao = get()) }
+    single<DefaultCurrencyRepository> { DefaultCurrencyRepositoryImpl(preferencesDataSource = get()) }
     single<ReceiptStorage> { LocalReceiptStorage(context = get(), dispatcherProvider = get()) }
     single<RemoteExpenseDataSource> { RetrofitRemoteExpenseDataSource(api = get()) }
     single<ExpenseSyncGateway> { ExpenseSyncGatewayImpl(expenseDao = get()) }
@@ -37,6 +41,7 @@ val expensesModule = module {
     factory { ObserveExpenseUseCase(get()) }
     factory { ObserveExpenseCategoriesUseCase(get()) }
     factory { SaveReceiptUseCase(get()) }
+    factory { GetDefaultCurrencyUseCase(get()) }
 
     viewModel { ExpensesListViewModel(get(), get(), get()) }
     viewModel { (expenseId: String?) ->
@@ -47,6 +52,7 @@ val expensesModule = module {
             observeExpenseUseCase = get(),
             observeExpenseCategoriesUseCase = get(),
             saveReceiptUseCase = get(),
+            getDefaultCurrencyUseCase = get(),
         )
     }
     viewModel { (expenseId: String) ->

@@ -12,7 +12,7 @@ import com.mac.expensee.feature.expenses.di.expensesModule
 import com.mac.expensee.feature.settings.di.settingsModule
 import com.mac.expensee.navigation.RootViewModel
 import com.mac.expensee.theme.AppThemeViewModel
-import org.koin.core.module.dsl.viewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 private val appModule = module {

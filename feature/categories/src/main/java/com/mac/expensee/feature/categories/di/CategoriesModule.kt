@@ -7,7 +7,7 @@ import com.mac.expensee.feature.categories.domain.usecase.DeleteCategoryUseCase
 import com.mac.expensee.feature.categories.domain.usecase.ObserveCategoriesUseCase
 import com.mac.expensee.feature.categories.domain.usecase.RenameCategoryUseCase
 import com.mac.expensee.feature.categories.presentation.list.CategoriesViewModel
-import org.koin.core.module.dsl.viewModel
+import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.dsl.module
 
 val categoriesModule = module {

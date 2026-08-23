@@ -119,6 +119,10 @@ internal fun AddEditExpenseScreen(
                 value = state.amountText,
                 onValueChange = { onAction(AddEditExpenseAction.AmountChanged(it)) },
                 label = { Text("Amount") },
+                // Shows which currency this entry will be saved in -- see AddEditExpenseUiState.currency's
+                // KDoc: fixed for this form's lifetime, either the user's default-currency setting (new
+                // expense) or the currency the expense already had (editing).
+                prefix = { Text(state.currency.symbol) },
                 keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Decimal),
                 singleLine = true,
                 modifier = Modifier.fillMaxWidth(),

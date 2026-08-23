@@ -2,7 +2,6 @@ package com.mac.expensee.feature.expenses.presentation.list
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.mac.expensee.core.common.money.CurrencyCode
 import com.mac.expensee.core.common.money.Money
 import com.mac.expensee.core.ui.components.UiState
 import com.mac.expensee.feature.expenses.domain.model.ExpenseFilter
@@ -47,16 +46,20 @@ class ExpensesListViewModel(
                 categoryColorHex = category?.colorHex ?: "#9E9E9E",
             )
         }
-        val total = if (expenses.isEmpty()) {
-            null
-        } else {
-            Money.sum(expenses.map { it.amount }, expenses.first().amount.currency)
+        // Money.sum requires every amount to share one currency (see Money.plus) -- expenses can
+        // legitimately span more than one now that a new expense's currency follows the user's
+        // setting at creation time rather than always USD (see AddEditExpenseViewModel), so a mixed
+        // list simply has no single meaningful total rather than crashing or silently picking one
+        // currency's number to label with another's symbol. The dashboard is where a per-currency
+        // total (with a selector) belongs -- see feature:dashboard's DashboardSummaryBuilder.
+        val total = expenses.map { it.amount.currency }.distinct().singleOrNull()?.let { currency ->
+            Money.sum(expenses.map { it.amount }, currency)
         }
         ExpensesListUiState(
             items = UiState.Content(items),
             categories = categoryList,
             selectedCategoryId = selectedId,
-            total = total ?: Money.zero(CurrencyCode.USD),
+            total = total,
         )
     }.stateIn(
         scope = viewModelScope,
