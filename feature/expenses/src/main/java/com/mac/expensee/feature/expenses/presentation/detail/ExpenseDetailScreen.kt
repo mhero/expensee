@@ -35,6 +35,7 @@ import com.mac.expensee.core.ui.components.ErrorState
 import com.mac.expensee.core.ui.components.FullScreenLoading
 import com.mac.expensee.core.ui.components.MoneyText
 import com.mac.expensee.core.ui.components.UiState
+import com.mac.expensee.core.ui.theme.Spacing
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -128,8 +129,8 @@ private fun ExpenseDetailContentView(content: ExpenseDetailContent, modifier: Mo
     Column(
         modifier = modifier
             .fillMaxWidth()
-            .padding(16.dp),
-        verticalArrangement = Arrangement.spacedBy(12.dp),
+            .padding(Spacing.large),
+        verticalArrangement = Arrangement.spacedBy(Spacing.medium),
     ) {
         MoneyText(money = expense.amount, style = MaterialTheme.typography.titleLarge)
         Text(text = expense.description, style = MaterialTheme.typography.bodyLarge)

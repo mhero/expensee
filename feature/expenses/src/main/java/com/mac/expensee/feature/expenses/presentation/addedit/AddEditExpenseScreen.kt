@@ -54,6 +54,7 @@ import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.mac.expensee.core.ui.theme.Spacing
 import com.mac.expensee.feature.expenses.domain.model.ExpenseCategory
 import java.io.File
 import java.text.SimpleDateFormat
@@ -111,9 +112,9 @@ internal fun AddEditExpenseScreen(
         Column(
             modifier = Modifier
                 .padding(padding)
-                .padding(16.dp)
+                .padding(Spacing.large)
                 .verticalScroll(rememberScrollState()),
-            verticalArrangement = Arrangement.spacedBy(12.dp),
+            verticalArrangement = Arrangement.spacedBy(Spacing.medium),
         ) {
             OutlinedTextField(
                 value = state.amountText,

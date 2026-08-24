@@ -12,7 +12,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.dp
+import com.mac.expensee.core.ui.theme.Spacing
 
 @Composable
 fun FullScreenLoading(modifier: Modifier = Modifier) {
@@ -32,7 +32,7 @@ fun EmptyState(
     modifier: Modifier = Modifier,
 ) {
     Column(
-        modifier = modifier.fillMaxSize().padding(32.dp),
+        modifier = modifier.fillMaxSize().padding(Spacing.xxl),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
@@ -41,7 +41,7 @@ fun EmptyState(
             text = message,
             style = MaterialTheme.typography.bodyLarge,
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(top = 8.dp),
+            modifier = Modifier.padding(top = Spacing.small),
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
     }
@@ -54,7 +54,7 @@ fun ErrorState(
     onRetry: (() -> Unit)? = null,
 ) {
     Column(
-        modifier = modifier.fillMaxSize().padding(32.dp),
+        modifier = modifier.fillMaxSize().padding(Spacing.xxl),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,
     ) {
@@ -65,7 +65,7 @@ fun ErrorState(
             color = MaterialTheme.colorScheme.error,
         )
         if (onRetry != null) {
-            Button(onClick = onRetry, modifier = Modifier.padding(top = 16.dp)) {
+            Button(onClick = onRetry, modifier = Modifier.padding(top = Spacing.large)) {
                 Text("Retry")
             }
         }

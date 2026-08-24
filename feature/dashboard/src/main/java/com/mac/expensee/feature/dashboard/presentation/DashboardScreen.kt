@@ -41,6 +41,7 @@ import com.mac.expensee.core.ui.components.ErrorState
 import com.mac.expensee.core.ui.components.FullScreenLoading
 import com.mac.expensee.core.ui.components.MoneyText
 import com.mac.expensee.core.ui.components.UiState
+import com.mac.expensee.core.ui.theme.Spacing
 import com.mac.expensee.feature.dashboard.domain.model.CategorySpend
 import com.mac.expensee.feature.dashboard.domain.model.DailyTotal
 import com.mac.expensee.feature.dashboard.domain.model.DashboardSummary
@@ -111,12 +112,12 @@ private fun DashboardContent(
     onViewAllExpenses: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LazyColumn(modifier = modifier, contentPadding = PaddingValues(16.dp)) {
+    LazyColumn(modifier = modifier, contentPadding = PaddingValues(Spacing.large)) {
         item { SummaryHeader(summary) }
         if (summary.availableCurrencies.size > 1) {
-            item { CurrencySelector(summary = summary, onAction = onAction, modifier = Modifier.padding(top = 8.dp)) }
+            item { CurrencySelector(summary = summary, onAction = onAction, modifier = Modifier.padding(top = Spacing.small)) }
         }
-        item { MonthlyChart(summary.dailyTotals, modifier = Modifier.padding(top = 16.dp)) }
+        item { MonthlyChart(summary.dailyTotals, modifier = Modifier.padding(top = Spacing.large)) }
         item { SectionHeader(title = "Spending by category", actionLabel = "Manage", onAction = onManageCategories) }
         items(summary.categoryBreakdown, key = { it.categoryId }) { CategoryBreakdownRow(it) }
         item {
@@ -124,7 +125,7 @@ private fun DashboardContent(
                 title = "Recent expenses",
                 actionLabel = "View all",
                 onAction = onViewAllExpenses,
-                modifier = Modifier.padding(top = 16.dp),
+                modifier = Modifier.padding(top = Spacing.large),
             )
         }
         if (summary.recentExpenses.isEmpty()) {
@@ -138,7 +139,7 @@ private fun DashboardContent(
 @Composable
 private fun SummaryHeader(summary: DashboardSummary) {
     Card(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(Spacing.large)) {
             Text(text = "This month", style = MaterialTheme.typography.labelSmall)
             MoneyText(money = summary.monthlyTotal, style = MaterialTheme.typography.titleLarge)
             Text(
@@ -163,7 +164,7 @@ private fun CurrencySelector(
     onAction: (DashboardAction) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    LazyRow(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+    LazyRow(modifier = modifier, horizontalArrangement = Arrangement.spacedBy(Spacing.small)) {
         items(summary.availableCurrencies, key = { it.isoCode }) { currency ->
             FilterChip(
                 selected = currency == summary.selectedCurrency,
@@ -181,13 +182,13 @@ private fun MonthlyChart(dailyTotals: List<DailyTotal>, modifier: Modifier = Mod
     val barColor = MaterialTheme.colorScheme.primary
 
     Card(modifier = modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(16.dp)) {
+        Column(modifier = Modifier.padding(Spacing.large)) {
             Text(text = "Daily spending", style = MaterialTheme.typography.labelSmall)
             Canvas(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(120.dp)
-                    .padding(top = 8.dp),
+                    .padding(top = Spacing.small),
             ) {
                 val barCount = dailyTotals.size
                 val gap = size.width * 0.02f / barCount.coerceAtLeast(1)
@@ -218,7 +219,7 @@ private fun SectionHeader(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(vertical = 8.dp),
+            .padding(vertical = Spacing.small),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -234,7 +235,7 @@ private fun SectionHeader(
 
 @Composable
 private fun CategoryBreakdownRow(spend: CategorySpend) {
-    Column(modifier = Modifier.fillMaxWidth().padding(vertical = 6.dp)) {
+    Column(modifier = Modifier.fillMaxWidth().padding(vertical = Spacing.tight)) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -242,7 +243,7 @@ private fun CategoryBreakdownRow(spend: CategorySpend) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 androidx.compose.foundation.layout.Box(
                     modifier = Modifier
-                        .padding(end = 8.dp)
+                        .padding(end = Spacing.small)
                         .size(10.dp)
                         .clip(CircleShape)
                         .background(categoryColor(spend.colorHex)),
@@ -255,7 +256,7 @@ private fun CategoryBreakdownRow(spend: CategorySpend) {
             modifier = Modifier
                 .fillMaxWidth()
                 .height(6.dp)
-                .padding(top = 4.dp)
+                .padding(top = Spacing.extraSmall)
                 .clip(RoundedCornerShape(3.dp))
                 .background(MaterialTheme.colorScheme.surfaceVariant),
         ) {
@@ -275,7 +276,7 @@ private fun RecentExpenseRow(expense: RecentExpense) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 6.dp),
+            .padding(vertical = Spacing.tight),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Column {

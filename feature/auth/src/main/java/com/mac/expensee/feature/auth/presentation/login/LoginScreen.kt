@@ -21,8 +21,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.mac.expensee.core.ui.theme.Spacing
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -54,14 +54,14 @@ internal fun LoginScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(PaddingValues(24.dp)),
+            .padding(PaddingValues(Spacing.extraLarge)),
         verticalArrangement = Arrangement.Center,
     ) {
         Text(text = "Welcome back", style = MaterialTheme.typography.titleLarge)
         Text(
             text = "Sign in to Expensee",
             style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(bottom = 24.dp, top = 4.dp),
+            modifier = Modifier.padding(bottom = Spacing.extraLarge, top = Spacing.extraSmall),
         )
 
         OutlinedTextField(
@@ -80,14 +80,14 @@ internal fun LoginScreen(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 8.dp),
+                .padding(top = Spacing.small),
         )
 
         state.errorMessage?.let {
             Text(
                 text = it,
                 color = MaterialTheme.colorScheme.error,
-                modifier = Modifier.padding(top = 8.dp),
+                modifier = Modifier.padding(top = Spacing.small),
             )
         }
 
@@ -96,10 +96,10 @@ internal fun LoginScreen(
             enabled = !state.isSubmitting,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp),
+                .padding(top = Spacing.large),
         ) {
             if (state.isSubmitting) {
-                CircularProgressIndicator(modifier = Modifier.padding(2.dp))
+                CircularProgressIndicator(modifier = Modifier.padding(Spacing.tiny))
             } else {
                 Text("Sign in")
             }
@@ -109,7 +109,7 @@ internal fun LoginScreen(
             onClick = onNavigateToSetup,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 4.dp),
+                .padding(top = Spacing.extraSmall),
         ) {
             Text("Don't have an account? Create one")
         }

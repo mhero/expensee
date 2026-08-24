@@ -39,11 +39,12 @@ import com.mac.expensee.core.ui.components.ErrorState
 import com.mac.expensee.core.ui.components.FullScreenLoading
 import com.mac.expensee.core.ui.components.MoneyText
 import com.mac.expensee.core.ui.components.UiState
+import com.mac.expensee.core.ui.theme.Spacing
 import com.mac.expensee.feature.expenses.domain.model.ExpenseCategory
-import org.koin.androidx.compose.koinViewModel
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
+import org.koin.androidx.compose.koinViewModel
 
 @Composable
 fun ExpensesListRoute(
@@ -83,7 +84,7 @@ private fun ExpensesListScreen(
                 onSelect = { onAction(ExpensesListAction.SelectCategoryFilter(it)) },
             )
             state.total?.let {
-                Row(modifier = Modifier.fillMaxWidth().padding(horizontal = 16.dp, vertical = 4.dp)) {
+                Row(modifier = Modifier.fillMaxWidth().padding(horizontal = Spacing.large, vertical = Spacing.extraSmall)) {
                     Text(text = "Total: ", style = MaterialTheme.typography.bodyLarge)
                     MoneyText(money = it, style = MaterialTheme.typography.bodyLarge)
                 }
@@ -117,8 +118,8 @@ private fun CategoryFilterRow(
     onSelect: (String?) -> Unit,
 ) {
     LazyRow(
-        contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        contentPadding = PaddingValues(horizontal = Spacing.large, vertical = Spacing.small),
+        horizontalArrangement = Arrangement.spacedBy(Spacing.small),
     ) {
         item {
             FilterChip(selected = selectedCategoryId == null, onClick = { onSelect(null) }, label = { Text("All") })
@@ -139,7 +140,7 @@ private fun ExpensesLazyList(
     onExpenseClick: (String) -> Unit,
     onDelete: (String) -> Unit,
 ) {
-    LazyColumn(contentPadding = PaddingValues(16.dp)) {
+    LazyColumn(contentPadding = PaddingValues(Spacing.large)) {
         items(items, key = { it.expense.id }) { item ->
             ExpenseRow(
                 item = item,
@@ -155,18 +156,18 @@ private fun ExpenseRow(item: ExpenseListItem, onClick: () -> Unit, onDelete: () 
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(vertical = 4.dp),
+            .padding(vertical = Spacing.extraSmall),
         onClick = onClick,
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp),
+                .padding(Spacing.medium),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Box(
                 modifier = Modifier
-                    .padding(end = 12.dp)
+                    .padding(end = Spacing.medium)
                     .clip(CircleShape)
                     .background(categoryColor(item.categoryColorHex))
                     .size(10.dp),

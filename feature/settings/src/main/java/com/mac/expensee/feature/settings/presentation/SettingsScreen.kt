@@ -44,13 +44,13 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.mac.expensee.core.common.money.CurrencyCode
 import com.mac.expensee.core.security.biometric.BiometricAuthenticator
 import com.mac.expensee.core.security.biometric.BiometricAvailability
 import com.mac.expensee.core.security.biometric.BiometricResult
+import com.mac.expensee.core.ui.theme.Spacing
 import com.mac.expensee.feature.settings.domain.model.ThemeMode
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
@@ -98,8 +98,8 @@ private fun SettingsScreen(
                 .padding(padding)
                 .fillMaxWidth()
                 .verticalScroll(rememberScrollState())
-                .padding(16.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp),
+                .padding(Spacing.large),
+            verticalArrangement = Arrangement.spacedBy(Spacing.large),
         ) {
             CurrencySection(selected = state.currency, onSelected = { onAction(SettingsAction.CurrencyChanged(it)) })
             ThemeSection(selected = state.theme, onSelected = { onAction(SettingsAction.ThemeChanged(it)) })
@@ -136,7 +136,7 @@ private fun SettingsScreen(
 @Composable
 private fun SettingsSectionCard(title: String, content: @Composable () -> Unit) {
     Card(modifier = Modifier.fillMaxWidth()) {
-        Column(modifier = Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Column(modifier = Modifier.padding(Spacing.large), verticalArrangement = Arrangement.spacedBy(Spacing.small)) {
             Text(text = title, style = MaterialTheme.typography.titleMedium)
             content()
         }
@@ -304,9 +304,9 @@ private fun LogoutSection(onClick: () -> Unit) {
             modifier = Modifier
                 .fillMaxWidth()
                 .clickable(onClick = onClick)
-                .padding(16.dp),
+                .padding(Spacing.large),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(Spacing.medium),
         ) {
             Icon(Icons.Filled.Logout, contentDescription = null, tint = MaterialTheme.colorScheme.error)
             Text(text = "Log out", color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodyLarge)

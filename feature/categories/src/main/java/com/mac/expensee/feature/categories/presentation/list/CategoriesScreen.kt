@@ -41,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.mac.expensee.core.ui.theme.Spacing
 import com.mac.expensee.core.ui.components.EmptyState
 import com.mac.expensee.core.ui.components.ErrorState
 import com.mac.expensee.core.ui.components.FullScreenLoading
@@ -110,7 +111,7 @@ private fun CategoriesScreen(
                 } else {
                     LazyColumn(
                         modifier = Modifier.padding(padding),
-                        contentPadding = androidx.compose.foundation.layout.PaddingValues(16.dp),
+                        contentPadding = androidx.compose.foundation.layout.PaddingValues(Spacing.large),
                     ) {
                         items(categoriesState.data, key = { it.id }) { category ->
                             CategoryRow(
@@ -149,14 +150,14 @@ private fun CategoriesScreen(
 
 @Composable
 private fun CategoryRow(category: Category, onRename: () -> Unit, onDelete: () -> Unit) {
-    Card(modifier = Modifier.fillMaxWidth().padding(vertical = 4.dp)) {
+    Card(modifier = Modifier.fillMaxWidth().padding(vertical = Spacing.extraSmall)) {
         Row(
-            modifier = Modifier.fillMaxWidth().padding(12.dp),
+            modifier = Modifier.fillMaxWidth().padding(Spacing.medium),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             androidx.compose.foundation.layout.Box(
                 modifier = Modifier
-                    .padding(end = 12.dp)
+                    .padding(end = Spacing.medium)
                     .clip(CircleShape)
                     .background(categoryColor(category.colorHex))
                     .size(16.dp),
@@ -210,8 +211,8 @@ private fun RenameCategoryDialog(initialName: String, onDismiss: () -> Unit, onC
 @Composable
 private fun ColorPicker(selectedColor: String, onSelect: (String) -> Unit) {
     Row(
-        modifier = Modifier.padding(top = 12.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
+        modifier = Modifier.padding(top = Spacing.medium),
+        horizontalArrangement = Arrangement.spacedBy(Spacing.small),
     ) {
         PALETTE.forEach { hex ->
             val isSelected = hex == selectedColor

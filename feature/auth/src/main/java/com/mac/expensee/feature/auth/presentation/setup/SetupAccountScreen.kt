@@ -20,7 +20,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.unit.dp
+import com.mac.expensee.core.ui.theme.Spacing
 import org.koin.androidx.compose.koinViewModel
 
 @Composable
@@ -47,14 +47,14 @@ private fun SetupAccountScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .padding(PaddingValues(24.dp)),
+            .padding(PaddingValues(Spacing.extraLarge)),
         verticalArrangement = Arrangement.Center,
     ) {
         Text(text = "Create your account", style = MaterialTheme.typography.titleLarge)
         Text(
             text = "Expensee stores everything on this device.",
             style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(bottom = 24.dp, top = 4.dp),
+            modifier = Modifier.padding(bottom = Spacing.extraLarge, top = Spacing.extraSmall),
         )
 
         OutlinedTextField(
@@ -73,7 +73,7 @@ private fun SetupAccountScreen(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 8.dp),
+                .padding(top = Spacing.small),
         )
         OutlinedTextField(
             value = state.confirmPassword,
@@ -84,14 +84,14 @@ private fun SetupAccountScreen(
             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 8.dp),
+                .padding(top = Spacing.small),
         )
 
         state.errorMessage?.let {
             Text(
                 text = it,
                 color = MaterialTheme.colorScheme.error,
-                modifier = Modifier.padding(top = 8.dp),
+                modifier = Modifier.padding(top = Spacing.small),
             )
         }
 
@@ -100,10 +100,10 @@ private fun SetupAccountScreen(
             enabled = !state.isSubmitting,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 16.dp),
+                .padding(top = Spacing.large),
         ) {
             if (state.isSubmitting) {
-                CircularProgressIndicator(modifier = Modifier.padding(2.dp))
+                CircularProgressIndicator(modifier = Modifier.padding(Spacing.tiny))
             } else {
                 Text("Create account")
             }
@@ -113,7 +113,7 @@ private fun SetupAccountScreen(
             onClick = onNavigateToLogin,
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(top = 4.dp),
+                .padding(top = Spacing.extraSmall),
         ) {
             Text("Already have an account? Sign in")
         }
