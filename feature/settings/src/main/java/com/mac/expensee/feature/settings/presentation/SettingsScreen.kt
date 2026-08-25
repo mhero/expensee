@@ -44,17 +44,21 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentActivity
 import com.mac.expensee.core.common.money.CurrencyCode
 import com.mac.expensee.core.security.biometric.BiometricAuthenticator
 import com.mac.expensee.core.security.biometric.BiometricAvailability
 import com.mac.expensee.core.security.biometric.BiometricResult
+import com.mac.expensee.core.ui.theme.ExpenseeTheme
 import com.mac.expensee.core.ui.theme.Spacing
 import com.mac.expensee.feature.settings.domain.model.ThemeMode
 import kotlinx.coroutines.launch
 import org.koin.androidx.compose.koinViewModel
+import org.koin.compose.KoinApplication
 import org.koin.compose.koinInject
+import org.koin.dsl.module
 
 @Composable
 fun SettingsRoute(
@@ -131,6 +135,38 @@ private fun SettingsScreen(
             },
         )
     }
+}
+
+/** Wraps a preview in an isolated Koin instance so `BiometricSection`'s `koinInject<BiometricAuthenticator>()`
+ *  has something to resolve -- previews render outside a `FragmentActivity`, so `BiometricSection`
+ *  never actually calls into it (see that composable's `activity as? FragmentActivity` check). */
+@Composable
+private fun SettingsPreviewScaffold(state: SettingsUiState) {
+    ExpenseeTheme(dynamicColor = false) {
+        KoinApplication(application = { modules(module { single { BiometricAuthenticator() } }) }) {
+            SettingsScreen(state = state, onAction = {}, onLogout = {}, onBack = {})
+        }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SettingsScreenPreview() {
+    SettingsPreviewScaffold(
+        state = SettingsUiState(
+            currency = CurrencyCode.USD,
+            theme = ThemeMode.SYSTEM,
+            notificationsEnabled = true,
+            biometricUnlockEnabled = false,
+            isLoading = false,
+        ),
+    )
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SettingsScreenLoadingPreview() {
+    SettingsPreviewScaffold(state = SettingsUiState(isLoading = true))
 }
 
 @Composable

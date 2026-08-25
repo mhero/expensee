@@ -21,7 +21,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.mac.expensee.core.ui.theme.ExpenseeTheme
 import com.mac.expensee.core.ui.theme.Spacing
 import org.koin.androidx.compose.koinViewModel
 
@@ -113,5 +115,37 @@ internal fun LoginScreen(
         ) {
             Text("Don't have an account? Create one")
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun LoginScreenPreview() {
+    ExpenseeTheme(dynamicColor = false) {
+        LoginScreen(state = LoginUiState(username = "alice"), onAction = {}, onNavigateToSetup = {})
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun LoginScreenSubmittingPreview() {
+    ExpenseeTheme(dynamicColor = false) {
+        LoginScreen(
+            state = LoginUiState(username = "alice", password = "hunter2", isSubmitting = true),
+            onAction = {},
+            onNavigateToSetup = {},
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun LoginScreenErrorPreview() {
+    ExpenseeTheme(dynamicColor = false) {
+        LoginScreen(
+            state = LoginUiState(username = "alice", errorMessage = "Incorrect username or password"),
+            onAction = {},
+            onNavigateToSetup = {},
+        )
     }
 }

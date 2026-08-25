@@ -40,12 +40,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import com.mac.expensee.core.ui.theme.Spacing
 import com.mac.expensee.core.ui.components.EmptyState
 import com.mac.expensee.core.ui.components.ErrorState
 import com.mac.expensee.core.ui.components.FullScreenLoading
 import com.mac.expensee.core.ui.components.UiState
+import com.mac.expensee.core.ui.theme.ExpenseeTheme
+import com.mac.expensee.core.ui.theme.Spacing
 import com.mac.expensee.feature.categories.domain.model.Category
 import org.koin.androidx.compose.koinViewModel
 
@@ -145,6 +147,40 @@ private fun CategoriesScreen(
                 categoryPendingRename = null
             },
         )
+    }
+}
+
+private val PREVIEW_CATEGORIES = listOf(
+    Category(id = "c1", name = "Food", colorHex = "#EF6C00", icon = "default", isDefault = true),
+    Category(id = "c2", name = "Transport", colorHex = "#1E88E5", icon = "default", isDefault = true),
+    Category(id = "c3", name = "Shopping", colorHex = "#8E24AA", icon = "default", isDefault = false),
+)
+
+@Preview(showBackground = true)
+@Composable
+private fun CategoriesScreenPreview() {
+    ExpenseeTheme(dynamicColor = false) {
+        CategoriesScreen(
+            state = CategoriesUiState(categories = UiState.Content(PREVIEW_CATEGORIES)),
+            onAction = {},
+            onNavigateUp = {},
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CategoriesScreenEmptyPreview() {
+    ExpenseeTheme(dynamicColor = false) {
+        CategoriesScreen(state = CategoriesUiState(categories = UiState.Content(emptyList())), onAction = {}, onNavigateUp = {})
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun CategoriesScreenLoadingPreview() {
+    ExpenseeTheme(dynamicColor = false) {
+        CategoriesScreen(state = CategoriesUiState(), onAction = {}, onNavigateUp = {})
     }
 }
 

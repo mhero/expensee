@@ -29,13 +29,18 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.mac.expensee.core.common.money.CurrencyCode
+import com.mac.expensee.core.common.money.Money
 import com.mac.expensee.core.ui.components.ErrorState
 import com.mac.expensee.core.ui.components.FullScreenLoading
 import com.mac.expensee.core.ui.components.MoneyText
 import com.mac.expensee.core.ui.components.UiState
+import com.mac.expensee.core.ui.theme.ExpenseeTheme
 import com.mac.expensee.core.ui.theme.Spacing
+import com.mac.expensee.feature.expenses.domain.model.Expense
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -120,6 +125,40 @@ private fun ExpenseDetailScreen(
                 TextButton(onClick = { showDeleteConfirm = false }) { Text("Cancel") }
             },
         )
+    }
+}
+
+private val PREVIEW_CONTENT = ExpenseDetailContent(
+    expense = Expense(
+        id = "e1",
+        categoryId = "c1",
+        amount = Money(2499, CurrencyCode.USD),
+        description = "Groceries",
+        notes = "Weekly shop at the farmers market",
+        date = System.currentTimeMillis(),
+        receiptPath = null,
+    ),
+    categoryName = "Food",
+)
+
+@Preview(showBackground = true)
+@Composable
+private fun ExpenseDetailScreenPreview() {
+    ExpenseeTheme(dynamicColor = false) {
+        ExpenseDetailScreen(
+            state = ExpenseDetailUiState(expense = UiState.Content(PREVIEW_CONTENT)),
+            onAction = {},
+            onNavigateUp = {},
+            onEdit = {},
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ExpenseDetailScreenLoadingPreview() {
+    ExpenseeTheme(dynamicColor = false) {
+        ExpenseDetailScreen(state = ExpenseDetailUiState(), onAction = {}, onNavigateUp = {}, onEdit = {})
     }
 }
 

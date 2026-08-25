@@ -20,6 +20,8 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.tooling.preview.Preview
+import com.mac.expensee.core.ui.theme.ExpenseeTheme
 import com.mac.expensee.core.ui.theme.Spacing
 import org.koin.androidx.compose.koinViewModel
 
@@ -117,5 +119,30 @@ private fun SetupAccountScreen(
         ) {
             Text("Already have an account? Sign in")
         }
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SetupAccountScreenPreview() {
+    ExpenseeTheme(dynamicColor = false) {
+        SetupAccountScreen(state = SetupAccountUiState(), onAction = {}, onNavigateToLogin = {})
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun SetupAccountScreenErrorPreview() {
+    ExpenseeTheme(dynamicColor = false) {
+        SetupAccountScreen(
+            state = SetupAccountUiState(
+                username = "alice",
+                password = "hunter2",
+                confirmPassword = "hunter3",
+                errorMessage = "Passwords don't match",
+            ),
+            onAction = {},
+            onNavigateToLogin = {},
+        )
     }
 }

@@ -33,13 +33,18 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.mac.expensee.core.common.money.CurrencyCode
+import com.mac.expensee.core.common.money.Money
 import com.mac.expensee.core.ui.components.EmptyState
 import com.mac.expensee.core.ui.components.ErrorState
 import com.mac.expensee.core.ui.components.FullScreenLoading
 import com.mac.expensee.core.ui.components.MoneyText
 import com.mac.expensee.core.ui.components.UiState
+import com.mac.expensee.core.ui.theme.ExpenseeTheme
 import com.mac.expensee.core.ui.theme.Spacing
+import com.mac.expensee.feature.expenses.domain.model.Expense
 import com.mac.expensee.feature.expenses.domain.model.ExpenseCategory
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -108,6 +113,70 @@ private fun ExpensesListScreen(
                 }
             }
         }
+    }
+}
+
+private val PREVIEW_CATEGORIES = listOf(
+    ExpenseCategory(id = "c1", name = "Food", colorHex = "#EF6C00"),
+    ExpenseCategory(id = "c2", name = "Transport", colorHex = "#1E88E5"),
+)
+
+private val PREVIEW_ITEMS = listOf(
+    ExpenseListItem(
+        expense = Expense(
+            id = "e1",
+            categoryId = "c1",
+            amount = Money(1250, CurrencyCode.USD),
+            description = "Groceries",
+            notes = null,
+            date = System.currentTimeMillis(),
+            receiptPath = null,
+        ),
+        categoryName = "Food",
+        categoryColorHex = "#EF6C00",
+    ),
+    ExpenseListItem(
+        expense = Expense(
+            id = "e2",
+            categoryId = "c2",
+            amount = Money(3599, CurrencyCode.USD),
+            description = "Train ticket",
+            notes = null,
+            date = System.currentTimeMillis(),
+            receiptPath = null,
+        ),
+        categoryName = "Transport",
+        categoryColorHex = "#1E88E5",
+    ),
+)
+
+@Preview(showBackground = true)
+@Composable
+private fun ExpensesListScreenPreview() {
+    ExpenseeTheme(dynamicColor = false) {
+        ExpensesListScreen(
+            state = ExpensesListUiState(
+                items = UiState.Content(PREVIEW_ITEMS),
+                categories = PREVIEW_CATEGORIES,
+                total = Money(4849, CurrencyCode.USD),
+            ),
+            onAction = {},
+            onAddExpense = {},
+            onExpenseClick = {},
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun ExpensesListScreenEmptyPreview() {
+    ExpenseeTheme(dynamicColor = false) {
+        ExpensesListScreen(
+            state = ExpensesListUiState(items = UiState.Content(emptyList()), categories = PREVIEW_CATEGORIES),
+            onAction = {},
+            onAddExpense = {},
+            onExpenseClick = {},
+        )
     }
 }
 

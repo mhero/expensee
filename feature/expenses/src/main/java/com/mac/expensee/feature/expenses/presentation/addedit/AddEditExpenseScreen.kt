@@ -52,8 +52,10 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
+import com.mac.expensee.core.ui.theme.ExpenseeTheme
 import com.mac.expensee.core.ui.theme.Spacing
 import com.mac.expensee.feature.expenses.domain.model.ExpenseCategory
 import java.io.File
@@ -202,6 +204,62 @@ internal fun AddEditExpenseScreen(
         ) {
             DatePicker(state = datePickerState)
         }
+    }
+}
+
+private val PREVIEW_CATEGORIES = listOf(
+    ExpenseCategory(id = "c1", name = "Food", colorHex = "#EF6C00"),
+    ExpenseCategory(id = "c2", name = "Transport", colorHex = "#1E88E5"),
+)
+
+@Preview(showBackground = true)
+@Composable
+private fun AddEditExpenseScreenPreview() {
+    ExpenseeTheme(dynamicColor = false) {
+        AddEditExpenseScreen(
+            state = AddEditExpenseUiState(
+                amountText = "24.99",
+                description = "Groceries",
+                categories = PREVIEW_CATEGORIES,
+                selectedCategoryId = "c1",
+            ),
+            onAction = {},
+            onNavigateUp = {},
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AddEditExpenseScreenEditingPreview() {
+    ExpenseeTheme(dynamicColor = false) {
+        AddEditExpenseScreen(
+            state = AddEditExpenseUiState(
+                expenseId = "e1",
+                amountText = "24.99",
+                description = "Groceries",
+                categories = PREVIEW_CATEGORIES,
+                selectedCategoryId = "c1",
+            ),
+            onAction = {},
+            onNavigateUp = {},
+        )
+    }
+}
+
+@Preview(showBackground = true)
+@Composable
+private fun AddEditExpenseScreenErrorPreview() {
+    ExpenseeTheme(dynamicColor = false) {
+        AddEditExpenseScreen(
+            state = AddEditExpenseUiState(
+                categories = PREVIEW_CATEGORIES,
+                selectedCategoryId = "c1",
+                errorMessage = "Amount must be greater than zero",
+            ),
+            onAction = {},
+            onNavigateUp = {},
+        )
     }
 }
 
