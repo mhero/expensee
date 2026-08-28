@@ -13,16 +13,14 @@ import androidx.compose.ui.unit.dp
  * `.height(...)`/`RoundedCornerShape(...)` values on the composable that owns them, same as
  * before this was centralized.
  *
- * Roughly a 4dp grid. [tiny] and [tight] are the two exceptions that already existed in the app
- * before this was centralized -- kept at their original values (not rounded onto the grid) so
- * centralizing spacing doesn't change any screen's actual layout.
+ * A 4dp grid. [tiny] is the one exception that already existed in the app before this was
+ * centralized -- kept at its original value (not rounded onto the grid) so centralizing spacing
+ * didn't itself change that one screen's layout.
  */
 object Spacing {
     /** Only used to inset the small `CircularProgressIndicator` inside the auth screens' submit button. */
     val tiny = 2.dp
     val extraSmall = 4.dp
-    /** A couple of dashboard rows use this slightly tighter vertical rhythm instead of [small]. */
-    val tight = 6.dp
     val small = 8.dp
     val medium = 12.dp
     val large = 16.dp

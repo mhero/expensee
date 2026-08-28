@@ -1,6 +1,5 @@
 package com.mac.expensee.feature.dashboard.presentation
 
-import android.annotation.SuppressLint
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -123,19 +122,19 @@ internal fun DashboardScreen(
 /**
  * Each top-level section (summary card, currency selector, chart, category breakdown, recent
  * expenses) is a single `LazyColumn` item, with [Arrangement.spacedBy] controlling the gap
- * *between* them -- deliberately more generous than the tight rhythm *within* a section (see
- * [CategoryBreakdownRow]/[RecentExpenseRow]'s [Spacing.tight]), so sections read as distinct
- * groups rather than one continuous list. Grouping a section's header and rows into one nested,
- * non-lazy `Column` (rather than feeding every row into the outer `LazyColumn` via `items(...)`)
- * is also what makes that per-section spacing possible in the first place -- `Arrangement.spacedBy`
- * has no way to tell "a new section started" from "the next row in this one" otherwise.
+ * *between* them -- deliberately more generous than the rhythm *within* a section (see
+ * [CategoryBreakdownRow]/[RecentExpenseRow], spaced by [Spacing.medium]), so sections read as
+ * distinct cards rather than one continuous list. Grouping a section's header and rows into one
+ * nested, non-lazy `Column` inside its own `Card` (rather than feeding every row into the outer
+ * `LazyColumn` via `items(...)`) is also what makes that per-section spacing -- and a shared card
+ * surface across every section -- possible in the first place: `Arrangement.spacedBy` has no way
+ * to tell "a new section started" from "the next row in this one" otherwise.
  *
  * Screen width, not just orientation, decides the spacing/margins: [LocalConfiguration]'s
  * `screenWidthDp` covers phones in landscape and foldables the same way it covers tablets, which a
  * plain portrait/landscape check wouldn't. Content is also capped at [MAX_CONTENT_WIDTH] and
  * centered on wide screens, rather than letting a summary card or chart stretch edge-to-edge.
  */
-@SuppressLint("ConfigurationScreenWidthHeight")
 @Composable
 private fun DashboardContent(
     summary: DashboardSummary,
@@ -256,7 +255,7 @@ private fun SectionHeader(
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .padding(bottom = Spacing.small),
+            .padding(bottom = Spacing.medium),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically,
     ) {
@@ -270,21 +269,28 @@ private fun SectionHeader(
     }
 }
 
+/** Wrapped in a [Card] (same as [SummaryHeader]/[MonthlyChart]) so every section shares one
+ *  consistent surface style, instead of the header-and-rows floating directly on the screen
+ *  background the way it used to. */
 @Composable
 private fun CategoryBreakdownSection(
     breakdown: List<CategorySpend>,
     onManageCategories: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
-        SectionHeader(title = "Spending by category", actionLabel = "Manage", onAction = onManageCategories)
-        breakdown.forEach { CategoryBreakdownRow(it) }
+    Card(modifier = modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.padding(Spacing.large)) {
+            SectionHeader(title = "Spending by category", actionLabel = "Manage", onAction = onManageCategories)
+            breakdown.forEachIndexed { index, spend ->
+                CategoryBreakdownRow(spend, modifier = Modifier.padding(top = if (index == 0) 0.dp else Spacing.medium))
+            }
+        }
     }
 }
 
 @Composable
-private fun CategoryBreakdownRow(spend: CategorySpend) {
-    Column(modifier = Modifier.fillMaxWidth().padding(vertical = Spacing.tight)) {
+private fun CategoryBreakdownRow(spend: CategorySpend, modifier: Modifier = Modifier) {
+    Column(modifier = modifier.fillMaxWidth()) {
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceBetween,
@@ -320,28 +326,31 @@ private fun CategoryBreakdownRow(spend: CategorySpend) {
     }
 }
 
+/** Wrapped in a [Card], same reasoning as [CategoryBreakdownSection]'s KDoc. */
 @Composable
 private fun RecentExpensesSection(
     recentExpenses: List<RecentExpense>,
     onViewAllExpenses: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Column(modifier = modifier) {
-        SectionHeader(title = "Recent expenses", actionLabel = "View all", onAction = onViewAllExpenses)
-        if (recentExpenses.isEmpty()) {
-            EmptyState(title = "No expenses this month", message = "Add one to see it here.")
-        } else {
-            recentExpenses.forEach { RecentExpenseRow(it) }
+    Card(modifier = modifier.fillMaxWidth()) {
+        Column(modifier = Modifier.padding(Spacing.large)) {
+            SectionHeader(title = "Recent expenses", actionLabel = "View all", onAction = onViewAllExpenses)
+            if (recentExpenses.isEmpty()) {
+                EmptyState(title = "No expenses this month", message = "Add one to see it here.")
+            } else {
+                recentExpenses.forEachIndexed { index, expense ->
+                    RecentExpenseRow(expense, modifier = Modifier.padding(top = if (index == 0) 0.dp else Spacing.medium))
+                }
+            }
         }
     }
 }
 
 @Composable
-private fun RecentExpenseRow(expense: RecentExpense) {
+private fun RecentExpenseRow(expense: RecentExpense, modifier: Modifier = Modifier) {
     Row(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(vertical = Spacing.tight),
+        modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
     ) {
         Column {
