@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--
+      Night-mode override of the base theme in values/themes.xml. This only covers the brief
+      window-background flash before Compose's first frame renders (Compose owns all real
+      theming after that, via ExpenseeTheme)  android:Theme.Material.NoActionBar (no ".Light")
+      is the platform's dark counterpart to the base theme's android:Theme.Material.Light.NoActionBar.
+    -->
+    <style name="Theme.Expensee" parent="android:Theme.Material.NoActionBar">
+        <item name="android:forceDarkAllowed">false</item>
+    </style>
+</resources>

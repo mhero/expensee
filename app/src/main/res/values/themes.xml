@@ -1,5 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.Expensee" parent="android:Theme.Material.Light.NoActionBar" />
+    <!--
+      forceDarkAllowed=false is required for Compose apps: without it, Android's system-level
+      "Force Dark" (API 29+) can reprocess/invert colors on top of content Compose has already
+      themed correctly whenever the device is in dark mode, producing washed-out, low-contrast
+      text and surfaces that have nothing to do with ExpenseeTheme's actual ColorScheme values.
+      Compose owns light/dark theming entirely (see core:ui's ExpenseeTheme) via darkTheme/
+      dynamicColor, so the platform's force-dark pass must be disabled to avoid it fighting with
+      that. No effect below API 29, where the attribute doesn't exist.
+    -->
+    <style name="Theme.Expensee" parent="android:Theme.Material.Light.NoActionBar">
+        <item name="android:forceDarkAllowed">false</item>
+    </style>
 </resources>
