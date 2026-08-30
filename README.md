@@ -139,3 +139,12 @@ Standard Gradle Kotlin DSL project.
 ```
 
 Open in Android Studio, or build from the command line — no backend is required.
+
+## Demo
+
+<video
+  src="https://github.com/user-attachments/assets/bbc627d8-aa55-478c-805a-730e446b09e4"
+  controls
+  controlslist="nodownload"
+  width="600">
+</video>
